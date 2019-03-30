@@ -15,7 +15,7 @@ const char *ssid = "Seibergerber-2.4";  //ENTER YOUR WIFI SETTINGS
 const char *password = "M0ntigue!";
  
 //Web/Server address to read/write from 
-const char *host = "192.168.0.24";   //https://circuits4you.com website or IP address of server
+const char *host = "192.168.0.12:4000";   //https://circuits4you.com website or IP address of server
  
 //=======================================================================
 //                    Power on setup
@@ -59,7 +59,7 @@ void loop() {
  
   //GET Data
   getData = "?status=" + ADCData + "&station=" + station ;  //Note "?" added at front
-  Link = "http://192.168.0.24/test_data_in.php?data1=13&data2=5";
+  Link = "http://192.168.0.12:4000/test_data_in.php?data1=13&data2=5";
   
   http.begin(Link);     //Specify request destination
   
@@ -71,6 +71,6 @@ void loop() {
  
   http.end();  //Close connection
   
-  delay(60000);  //GET Data at every 5 seconds
+  delay(1000);  //GET Data at every 5 seconds
 }
 //=======================================================================
