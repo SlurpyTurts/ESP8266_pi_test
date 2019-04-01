@@ -14,7 +14,7 @@ $coin_type = 4; #coin type 4 is LTC
 
 $date = date('m/d/Y h:i:s a', time());
 
-$fileContent = $date.", ".$var1.", ".$var2.", ".$coinData[$coin_type]['symbol'].": ".$coinData[$coin_type]['price_usd']$
+$fileContent = $date.", ".$var1.", ".$var2.", ".$coinData[$coin_type]['symbol'].": ".$coinData[$coin_type]['price_usd'];
 
 #echo $fileContent;
 

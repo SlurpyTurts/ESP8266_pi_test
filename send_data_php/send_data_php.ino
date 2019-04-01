@@ -10,58 +10,54 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
  
-/* Set these to your desired credentials. */
-const char *ssid = "Seibergerber-2.4";  //ENTER YOUR WIFI SETTINGS
+const char *ssid = "Seibergerber-2.4";
 const char *password = "M0ntigue!";
- 
-//Web/Server address to read/write from 
-const char *host = "192.168.0.12:4000";   //https://circuits4you.com website or IP address of server
- 
-//=======================================================================
-//                    Power on setup
-//=======================================================================
+
+const char *host = "192.168.0.24";
+const char *port = "4000";
  
 void setup() {
   delay(1000);
   Serial.begin(115200);
-  WiFi.mode(WIFI_OFF);        //Prevents reconnection issue (taking too long to connect)
+  WiFi.mode(WIFI_OFF);
   delay(1000);
-  WiFi.mode(WIFI_STA);        //This line hides the viewing of ESP as wifi hotspot
+  WiFi.mode(WIFI_STA);
   
-  WiFi.begin(ssid, password);     //Connect to your WiFi router
+  WiFi.begin(ssid, password);
   Serial.println("");
+
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
  
   Serial.print("Connecting");
-  // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
  
-  //If connection successful show IP address in serial monitor
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
   Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());  //IP address assigned to your ESP
+  Serial.println(WiFi.localIP());
 }
- 
-//=======================================================================
-//                    Main Program Loop
-//=======================================================================
+
 void loop() {
-  HTTPClient http;    //Declare object of class HTTPClient
+  HTTPClient http;
  
-  String ADCData, station, getData, Link;
-  int adcvalue=analogRead(A0);  //Read Analog value of LDR
-  ADCData = String(adcvalue);   //String to interger conversion
-  station = "B";
+  String data, url;
+  int data1 = analogRead(A0);  //Read Analog value of LDR
+  int data2 = analogRead(A0);  //Read Analog value of LDR
+
+  data1 = 5;
+  data2 = 13;
  
-  //GET Data
-  getData = "?status=" + ADCData + "&station=" + station ;  //Note "?" added at front
-  Link = "http://192.168.0.12:4000/test_data_in.php?data1=13&data2=5";
+  data = "?data1=" + String(data1) + "&data2=" + String(data2);
+  url = "http://" + String(host) + "/test_data_in.php" + data;
+
+  Serial.println(url);
   
-  http.begin(Link);     //Specify request destination
+  http.begin(url);
   
   int httpCode = http.GET();            //Send the request
   String payload = http.getString();    //Get the response payload
@@ -70,7 +66,12 @@ void loop() {
   Serial.println(payload);    //Print request response payload
  
   http.end();  //Close connection
+
   
-  delay(1000);  //GET Data at every 5 seconds
+  digitalWrite(LED_BUILTIN, LOW);  // Turn the LED off by making the voltage HIGH
+  delay(100);
+  digitalWrite(LED_BUILTIN, HIGH);
+  
+  delay(2900);  //GET Data at every 5 seconds
 }
 //=======================================================================
